@@ -1,6 +1,7 @@
 <template>
   <div class="container">
-    <Header @toggle-add-task="toggleAddTask" title="Task Tracker"></Header>
+    <Header @toggle-add-task="toggleAddTask" 
+    title="Task Tracker" :showAddTask="showAddTask" />
     <div v-show="showAddTask">
     <AddTask @add-task="addTask" />
     </div>
@@ -50,28 +51,16 @@ export default {
       // console.info("toggleReminder", id);
       this.tasks = [...this.tasks, task]
     },
+    async fetchTasks() {
+      const rest = await fetch('http://localhost:5000/tasks')
+
+      const data = await rest.json()
+
+      return data
+    },
   },
-  created() {
-    this.tasks = [
-      {
-        id: 1,
-        text: "Doctor appointment",
-        day: "March 15",
-        reminder: true,
-      },
-      {
-        id: 2,
-        text: "Friend appointment",
-        day: "March 17",
-        reminder: true,
-      },
-      {
-        id: 3,
-        text: "Ping Pong appointment",
-        day: "March 19",
-        reminder: false,
-      },
-    ];
+  async created() {
+    this.tasks = await this.fetchTasks()
   },
 };
 </script>
